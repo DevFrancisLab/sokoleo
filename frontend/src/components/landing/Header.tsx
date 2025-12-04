@@ -20,7 +20,7 @@ const Header = () => {
             <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
               <Sprout className="w-6 h-6 text-primary-foreground" />
             </div>
-            <span className="text-xl font-bold text-foreground">SokoSmart</span>
+            <span className="text-xl font-bold text-foreground">SokoLeo</span>
           </a>
 
           {/* Desktop Navigation */}

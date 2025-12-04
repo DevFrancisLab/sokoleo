@@ -15,8 +15,6 @@ const HeroSection = () => {
           {/* Text Content */}
           <div className="order-2 lg:order-1 text-center lg:text-left">
             <div className="inline-flex items-center gap-2 bg-green-light px-4 py-2 rounded-full mb-6 animate-fade-up">
-              <Sprout className="w-4 h-4 text-primary" />
-              <span className="text-sm font-medium text-primary">AI-Powered Agriculture</span>
             </div>
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground leading-tight mb-6 animate-fade-up">
@@ -33,9 +31,6 @@ const HeroSection = () => {
               <Button variant="hero" size="xl">
                 Get Started Free
                 <ArrowRight className="w-5 h-5" />
-              </Button>
-              <Button variant="outline" size="xl">
-                Watch Demo
               </Button>
             </div>
 
@@ -72,22 +67,8 @@ const HeroSection = () => {
             </div>
             
             {/* Floating card */}
-            <div className="absolute -bottom-6 -left-6 bg-card p-4 rounded-2xl shadow-card animate-float hidden sm:block">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-green-light rounded-xl flex items-center justify-center">
-                  <span className="text-2xl">📈</span>
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-foreground">Market Alert</p>
-                  <p className="text-xs text-muted-foreground">Prices up 15% in Nairobi</p>
-                </div>
-              </div>
-            </div>
-
+            
             {/* Another floating element */}
-            <div className="absolute -top-4 -right-4 bg-secondary px-4 py-2 rounded-full shadow-soft animate-float-delayed hidden sm:block">
-              <span className="text-sm font-semibold text-secondary-foreground">🍅 Best time to sell!</span>
-            </div>
           </div>
         </div>
       </div>
