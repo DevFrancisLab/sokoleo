@@ -55,17 +55,21 @@ const Dashboard = () => {
 								<InsightTile icon="🥇" label="Best Market Today" value="Wakulima Market" subtext="Ksh 45/kg • High demand" variant="primary" />
 							</div>
 						</section>
+
+						{/* When markets are collapsed, show chat below AI Suggestions in the main column */}
+						{!isMarketsOpen && (
+							<div className="mt-6">
+								<ChatSection />
+							</div>
+						)}
 					</div>
 
 					<aside className="space-y-6">
-						<div className="sticky top-24">
-							<ChatSection />
-						</div>
-
-						<div>
-							<h3 className="mb-3 text-sm font-medium text-muted-foreground">Quick Insights</h3>
-							{/* quick insights removed per request */}
-						</div>
+						{isMarketsOpen ? (
+							<div className="sticky top-24">
+								<ChatSection />
+							</div>
+						) : null}
 					</aside>
 				</div>
 			</main>
