@@ -53,10 +53,6 @@ const Dashboard = () => {
 
 							<div className="grid gap-3">
 								<InsightTile icon="🥇" label="Best Market Today" value="Wakulima Market" subtext="Ksh 45/kg • High demand" variant="primary" />
-								<div className="grid grid-cols-2 gap-3">
-									<InsightTile icon="📈" label="Profit Estimate" value="Ksh 2,500" variant="secondary" />
-									<InsightTile icon="🚚" label="When to Sell" value="Morning" variant="accent" />
-								</div>
 							</div>
 						</section>
 					</div>
