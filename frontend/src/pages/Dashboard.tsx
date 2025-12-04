@@ -1,9 +1,8 @@
-import Header from "@/components/dashboard/Header";
+// Header intentionally omitted on dashboard
 import MarketCard from "@/components/dashboard/MarketCard";
 import InsightTile from "@/components/dashboard/InsightTile";
 import ChatSection from "@/components/dashboard/ChatSection";
 import VoiceButton from "@/components/dashboard/VoiceButton";
-import Footer from "@/components/dashboard/Footer";
 
 const markets = [
 	{ name: "Wakulima Market", price: 45, demand: "high" as const, crates: 200, bestTime: "Morning", distance: 12 },
@@ -13,8 +12,7 @@ const markets = [
 
 const Dashboard = () => {
 	return (
-		<div className="min-h-screen bg-background pb-32">
-			<Header />
+		<div className="min-h-screen bg-background pb-24">
 
 			<main className="container max-w-6xl mx-auto px-4 py-8">
 				<div className="grid gap-6 lg:grid-cols-3">
@@ -65,7 +63,6 @@ const Dashboard = () => {
 			</main>
 
 			<VoiceButton />
-			<Footer />
 		</div>
 	);
 };
