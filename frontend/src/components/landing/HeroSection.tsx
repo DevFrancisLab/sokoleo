@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sprout } from "lucide-react";
-import heroImage from "@/assets/hero-farmer.jpg";
 
 const HeroSection = () => {
   return (
@@ -62,11 +61,11 @@ const HeroSection = () => {
 
           {/* Hero Image */}
           <div className="order-1 lg:order-2 relative animate-scale-in">
-            <div className="relative rounded-3xl overflow-hidden shadow-elevated">
+            <div className="relative rounded-3xl overflow-hidden shadow-elevated h-64 sm:h-80 md:h-96 lg:h-[36rem] max-w-full">
               <img
-                src={heroImage}
-                alt="Happy Kenyan farmer holding fresh tomatoes in a lush green field"
-                className="w-full h-auto object-cover"
+                src="/happy farmers.jpeg"
+                alt="Happy Kenyan farmers holding fresh tomatoes in a lush green field"
+                className="w-full h-full object-cover object-center"
               />
               {/* Overlay gradient */}
               <div className="absolute inset-0 bg-gradient-to-t from-foreground/20 to-transparent" />
