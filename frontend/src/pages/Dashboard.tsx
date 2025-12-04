@@ -64,10 +64,7 @@ const Dashboard = () => {
 
 						<div>
 							<h3 className="mb-3 text-sm font-medium text-muted-foreground">Quick Insights</h3>
-							<div className="grid gap-3">
-								<InsightTile icon="📊" label="Weekly Trend" value="Up 8%" variant="secondary" />
-								<InsightTile icon="⚠️" label="Supply Alert" value="Low in Kawangware" variant="accent" />
-							</div>
+							{/* quick insights removed per request */}
 						</div>
 					</aside>
 				</div>
