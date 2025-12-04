@@ -64,36 +64,38 @@ const Dashboard = () => {
 						</aside>
 					</div>
 				) : (
-					/* Collapsed: full width for AI Suggestions + Chat */
-					<div className="space-y-6 max-w-2xl">
-						<section>
-							<div className="flex items-center gap-2 mb-4">
-								<div className="flex items-center gap-2">
-									<span className="text-2xl">📊</span>
-									<h2 className="text-xl font-bold text-foreground">Market Updates</h2>
+					/* Collapsed: full width centered layout for AI Suggestions + Chat */
+					<div className="w-full flex justify-center">
+						<div className="w-full max-w-2xl space-y-6">
+							<section>
+								<div className="flex items-center gap-2 mb-4">
+									<div className="flex items-center gap-2">
+										<span className="text-2xl">📊</span>
+										<h2 className="text-xl font-bold text-foreground">Market Updates</h2>
+									</div>
+									<button
+										aria-expanded={isMarketsOpen}
+										onClick={() => setIsMarketsOpen((s) => !s)}
+										className="ml-auto p-2 rounded-md hover:bg-muted transition-colors flex items-center"
+									>
+										<ChevronDown className={`w-5 h-5 transition-transform ${isMarketsOpen ? "rotate-180" : "rotate-0"}`} />
+									</button>
 								</div>
-								<button
-									aria-expanded={isMarketsOpen}
-									onClick={() => setIsMarketsOpen((s) => !s)}
-									className="ml-auto p-2 rounded-md hover:bg-muted transition-colors flex items-center"
-								>
-									<ChevronDown className={`w-5 h-5 transition-transform ${isMarketsOpen ? "rotate-180" : "rotate-0"}`} />
-								</button>
-							</div>
-						</section>
+							</section>
 
-						<section>
-							<div className="flex items-center gap-2 mb-4">
-								<span className="text-2xl">💡</span>
-								<h2 className="text-xl font-bold text-foreground">AI Suggestions</h2>
-							</div>
+							<section>
+								<div className="flex items-center gap-2 mb-4">
+									<span className="text-2xl">💡</span>
+									<h2 className="text-xl font-bold text-foreground">AI Suggestions</h2>
+								</div>
 
-							<div className="grid gap-3">
-								<InsightTile icon="🥇" label="Best Market Today" value="Wakulima Market" subtext="Ksh 45/kg • High demand" variant="primary" />
-							</div>
-						</section>
+								<div className="grid gap-3">
+									<InsightTile icon="🥇" label="Best Market Today" value="Wakulima Market" subtext="Ksh 45/kg • High demand" variant="primary" />
+								</div>
+							</section>
 
-						<ChatSection />
+							<ChatSection />
+						</div>
 					</div>
 				)}
 			</main>			<VoiceButton />
