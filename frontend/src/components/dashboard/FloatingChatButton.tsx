@@ -1,17 +1,21 @@
 import { MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useVoice } from "./VoiceContext";
 
 interface FloatingChatButtonProps {
   onClick: () => void;
 }
 
 const FloatingChatButton = ({ onClick }: FloatingChatButtonProps) => {
+  const { isListening } = useVoice();
+
   return (
     <button
       onClick={onClick}
       className={cn(
         "fixed bottom-6 right-28 z-50 w-20 h-20 rounded-full flex items-center justify-center transition-all duration-300",
-        "bg-secondary shadow-glow hover:scale-105 active:scale-95"
+        "bg-secondary shadow-glow hover:scale-105 active:scale-95",
+        isListening && "hidden"
       )}
       aria-label="Open Chat"
     >
