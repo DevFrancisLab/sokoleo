@@ -57,8 +57,8 @@ const Dashboard = () => {
 							</section>
 						</div>
 
-						<aside className="space-y-6">
-							<div className="sticky top-24">
+						<aside className="space-y-6 lg:col-span-1">
+							<div className="sticky top-24 w-full">
 								<ChatSection />
 							</div>
 						</aside>
