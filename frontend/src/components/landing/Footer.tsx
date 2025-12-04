@@ -1,4 +1,4 @@
-import { Sprout, Facebook, Twitter, Instagram, Mail, Phone, MapPin } from "lucide-react";
+import { Facebook, Twitter, Instagram, Mail, Phone, MapPin } from "lucide-react";
 
 const Footer = () => {
   return (
@@ -7,11 +7,13 @@ const Footer = () => {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Brand */}
           <div className="lg:col-span-1">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
-                <Sprout className="w-6 h-6 text-primary-foreground" />
-              </div>
-              <span className="text-xl font-bold">SokoSmart</span>
+            <div className="flex items-center gap-3 mb-4">
+              <img
+                src="/sokoleologo.png"
+                alt="SokoLeo logo"
+                className="w-10 h-10 object-contain"
+              />
+              <span className="text-xl font-bold">SokoLeo</span>
             </div>
             <p className="text-primary-foreground/70 mb-6 leading-relaxed">
               Empowering Kenyan farmers with AI-driven insights to reduce waste and maximize profits.
@@ -57,7 +59,7 @@ const Footer = () => {
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
                 <Mail className="w-5 h-5 text-primary mt-0.5" />
-                <span className="text-primary-foreground/70">hello@sokosmart.co.ke</span>
+                <span className="text-primary-foreground/70">hello@sokolea.co.ke</span>
               </li>
               <li className="flex items-start gap-3">
                 <Phone className="w-5 h-5 text-primary mt-0.5" />
@@ -74,7 +76,7 @@ const Footer = () => {
         {/* Bottom bar */}
         <div className="mt-12 pt-8 border-t border-primary-foreground/10 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-primary-foreground/50 text-sm">
-            © 2025 SokoSmart. All rights reserved.
+            © 2025 SokoLeo. All rights reserved.
           </p>
           <p className="text-primary-foreground/50 text-sm">
             Made with ❤️ for Kenyan farmers

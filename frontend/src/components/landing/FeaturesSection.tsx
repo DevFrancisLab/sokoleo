@@ -41,7 +41,7 @@ const FeaturesSection = () => {
             <span className="text-gradient-primary">Succeed</span>
           </h2>
           <p className="text-lg text-muted-foreground">
-            Our AI-powered platform provides the tools and insights small-scale farmers need to thrive in competitive markets.
+            Our Smart platform provides the tools and insights small-scale farmers need to thrive in competitive markets.
           </p>
         </div>
 

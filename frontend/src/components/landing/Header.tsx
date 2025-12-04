@@ -16,10 +16,12 @@ const Header = () => {
       <div className="container">
         <nav className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
-          <a href="/" className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
-              <Sprout className="w-6 h-6 text-primary-foreground" />
-            </div>
+          <a href="/" className="flex items-center gap-3">
+            <img
+              src="/sokoleologo.png"
+              alt="SokoLeo logo"
+              className="w-10 h-10 object-contain"
+            />
             <span className="text-xl font-bold text-foreground">SokoLeo</span>
           </a>
 

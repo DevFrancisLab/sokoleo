@@ -23,7 +23,7 @@ const HeroSection = () => {
             </h1>
 
             <p className="text-lg sm:text-xl text-muted-foreground max-w-xl mx-auto lg:mx-0 mb-8 animate-fade-up-delayed">
-              Empowering Kenyan tomato farmers with AI-driven market predictions. 
+              Empowering Kenyan tomato farmers with Smart market predictions. 
               Reduce wastage, maximize profits, and connect with the right buyers at the right time.
             </p>
 
