@@ -1,4 +1,6 @@
 // Header intentionally omitted on dashboard
+import { useState } from "react";
+import { ChevronDown } from "lucide-react";
 import MarketCard from "@/components/dashboard/MarketCard";
 import InsightTile from "@/components/dashboard/InsightTile";
 import ChatSection from "@/components/dashboard/ChatSection";
@@ -11,6 +13,8 @@ const markets = [
 ];
 
 const Dashboard = () => {
+	const [isMarketsOpen, setIsMarketsOpen] = useState(true);
+
 	return (
 		<div className="min-h-screen bg-background pb-24">
 
@@ -18,16 +22,27 @@ const Dashboard = () => {
 				<div className="grid gap-6 lg:grid-cols-3">
 					<div className="lg:col-span-2 space-y-6">
 						<section>
-							<div className="flex items-center gap-2 mb-4">
-								<span className="text-2xl">📊</span>
-								<h2 className="text-xl font-bold text-foreground">Market Updates</h2>
-							</div>
+									<div className="flex items-center gap-2 mb-4">
+										<div className="flex items-center gap-2">
+											<span className="text-2xl">📊</span>
+											<h2 className="text-xl font-bold text-foreground">Market Updates</h2>
+										</div>
+										<button
+											aria-expanded={isMarketsOpen}
+											onClick={() => setIsMarketsOpen((s) => !s)}
+											className="ml-auto p-2 rounded-md hover:bg-muted transition-colors flex items-center"
+										>
+											<ChevronDown className={`w-5 h-5 transition-transform ${isMarketsOpen ? "rotate-180" : "rotate-0"}`} />
+										</button>
+									</div>
 
-							<div className="space-y-4">
-								{markets.map((market, index) => (
-									<MarketCard key={index} {...market} />
-								))}
-							</div>
+									{isMarketsOpen && (
+										<div className="space-y-4">
+											{markets.map((market, index) => (
+												<MarketCard key={index} {...market} />
+											))}
+										</div>
+									)}
 						</section>
 
 						<section>
