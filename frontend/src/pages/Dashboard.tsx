@@ -5,6 +5,7 @@ import MarketCard from "@/components/dashboard/MarketCard";
 import InsightTile from "@/components/dashboard/InsightTile";
 import ChatSection from "@/components/dashboard/ChatSection";
 import VoiceButton from "@/components/dashboard/VoiceButton";
+import FloatingChatButton from "@/components/dashboard/FloatingChatButton";
 
 const markets = [
 	{ name: "Wakulima Market", price: 45, demand: "high" as const, crates: 200, bestTime: "Morning", distance: 12 },
@@ -20,7 +21,7 @@ const Dashboard = () => {
 
 			<main className="container max-w-6xl mx-auto px-4 py-8">
 				{isMarketsOpen ? (
-					/* Expanded: 3-col layout with markets on left (2 cols) and chat in sidebar */
+					/* Expanded: 3-col layout with markets on left (2 cols), float chat and voice buttons */
 					<div className="grid gap-6 lg:grid-cols-3">
 						<div className="lg:col-span-2 space-y-6">
 							<section>
@@ -56,12 +57,6 @@ const Dashboard = () => {
 								</div>
 							</section>
 						</div>
-
-						<aside className="space-y-6 lg:col-span-1">
-							<div className="sticky top-24 w-full">
-								<ChatSection />
-							</div>
-						</aside>
 					</div>
 				) : (
 					/* Collapsed: full width centered layout for AI Suggestions + Chat */
@@ -98,7 +93,9 @@ const Dashboard = () => {
 						</div>
 					</div>
 				)}
-			</main>			<VoiceButton />
+			</main>
+			{isMarketsOpen && <FloatingChatButton />}
+			<VoiceButton />
 		</div>
 	);
 };
