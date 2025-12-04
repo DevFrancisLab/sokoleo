@@ -1,6 +1,7 @@
 // Header intentionally omitted on dashboard
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import MarketCard from "@/components/dashboard/MarketCard";
 import InsightTile from "@/components/dashboard/InsightTile";
 import ChatSection from "@/components/dashboard/ChatSection";
@@ -21,9 +22,9 @@ const Dashboard = () => {
 
 			<main className="container max-w-6xl mx-auto px-4 py-8">
 				{isMarketsOpen ? (
-					/* Expanded: 3-col layout with markets on left (2 cols), float chat and voice buttons */
-					<div className="grid gap-6 lg:grid-cols-3">
-						<div className="lg:col-span-2 space-y-6">
+					/* Expanded: centered markets only, AI Suggestions hidden */
+					<div className="w-full flex justify-center">
+						<div className="w-full max-w-2xl space-y-6">
 							<section>
 								<div className="flex items-center gap-2 mb-4">
 									<div className="flex items-center gap-2">
@@ -44,17 +45,10 @@ const Dashboard = () => {
 										<MarketCard key={index} {...market} />
 									))}
 								</div>
-							</section>
 
-							<section>
-								<div className="flex items-center gap-2 mb-4">
-									<span className="text-2xl">💡</span>
-									<h2 className="text-xl font-bold text-foreground">AI Suggestions</h2>
-								</div>
-
-								<div className="grid gap-3">
-									<InsightTile icon="🥇" label="Best Market Today" value="Wakulima Market" subtext="Ksh 45/kg • High demand" variant="primary" />
-								</div>
+								<Button className="w-full mt-4 h-12 text-lg font-semibold" variant="outline">
+									Load More
+								</Button>
 							</section>
 						</div>
 					</div>
@@ -94,7 +88,7 @@ const Dashboard = () => {
 					</div>
 				)}
 			</main>
-			{isMarketsOpen && <FloatingChatButton />}
+			{isMarketsOpen && <FloatingChatButton onClick={() => setIsMarketsOpen(false)} />}
 			<VoiceButton />
 		</div>
 	);
