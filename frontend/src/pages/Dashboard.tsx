@@ -19,30 +19,67 @@ const Dashboard = () => {
 		<div className="min-h-screen bg-background pb-24">
 
 			<main className="container max-w-6xl mx-auto px-4 py-8">
-				<div className="grid gap-6 lg:grid-cols-3">
-					<div className="lg:col-span-2 space-y-6">
-						<section>
-									<div className="flex items-center gap-2 mb-4">
-										<div className="flex items-center gap-2">
-											<span className="text-2xl">📊</span>
-											<h2 className="text-xl font-bold text-foreground">Market Updates</h2>
-										</div>
-										<button
-											aria-expanded={isMarketsOpen}
-											onClick={() => setIsMarketsOpen((s) => !s)}
-											className="ml-auto p-2 rounded-md hover:bg-muted transition-colors flex items-center"
-										>
-											<ChevronDown className={`w-5 h-5 transition-transform ${isMarketsOpen ? "rotate-180" : "rotate-0"}`} />
-										</button>
+				{isMarketsOpen ? (
+					/* Expanded: 3-col layout with markets on left (2 cols) and chat in sidebar */
+					<div className="grid gap-6 lg:grid-cols-3">
+						<div className="lg:col-span-2 space-y-6">
+							<section>
+								<div className="flex items-center gap-2 mb-4">
+									<div className="flex items-center gap-2">
+										<span className="text-2xl">📊</span>
+										<h2 className="text-xl font-bold text-foreground">Market Updates</h2>
 									</div>
+									<button
+										aria-expanded={isMarketsOpen}
+										onClick={() => setIsMarketsOpen((s) => !s)}
+										className="ml-auto p-2 rounded-md hover:bg-muted transition-colors flex items-center"
+									>
+										<ChevronDown className={`w-5 h-5 transition-transform ${isMarketsOpen ? "rotate-180" : "rotate-0"}`} />
+									</button>
+								</div>
 
-									{isMarketsOpen && (
-										<div className="space-y-4">
-											{markets.map((market, index) => (
-												<MarketCard key={index} {...market} />
-											))}
-										</div>
-									)}
+								<div className="space-y-4">
+									{markets.map((market, index) => (
+										<MarketCard key={index} {...market} />
+									))}
+								</div>
+							</section>
+
+							<section>
+								<div className="flex items-center gap-2 mb-4">
+									<span className="text-2xl">💡</span>
+									<h2 className="text-xl font-bold text-foreground">AI Suggestions</h2>
+								</div>
+
+								<div className="grid gap-3">
+									<InsightTile icon="🥇" label="Best Market Today" value="Wakulima Market" subtext="Ksh 45/kg • High demand" variant="primary" />
+								</div>
+							</section>
+						</div>
+
+						<aside className="space-y-6">
+							<div className="sticky top-24">
+								<ChatSection />
+							</div>
+						</aside>
+					</div>
+				) : (
+					/* Collapsed: full width for AI Suggestions + Chat */
+					<div className="space-y-6 max-w-2xl">
+						<section>
+							<div className="flex items-center gap-2 mb-4">
+								<div className="flex items-center gap-2">
+									<span className="text-2xl">📊</span>
+									<h2 className="text-xl font-bold text-foreground">Market Updates</h2>
+								</div>
+								<button
+									aria-expanded={isMarketsOpen}
+									onClick={() => setIsMarketsOpen((s) => !s)}
+									className="ml-auto p-2 rounded-md hover:bg-muted transition-colors flex items-center"
+								>
+									<ChevronDown className={`w-5 h-5 transition-transform ${isMarketsOpen ? "rotate-180" : "rotate-0"}`} />
+								</button>
+							</div>
 						</section>
 
 						<section>
@@ -56,25 +93,10 @@ const Dashboard = () => {
 							</div>
 						</section>
 
-						{/* When markets are collapsed, show chat below AI Suggestions in the main column */}
-						{!isMarketsOpen && (
-							<div className="mt-6">
-								<ChatSection />
-							</div>
-						)}
+						<ChatSection />
 					</div>
-
-					<aside className="space-y-6">
-						{isMarketsOpen ? (
-							<div className="sticky top-24">
-								<ChatSection />
-							</div>
-						) : null}
-					</aside>
-				</div>
-			</main>
-
-			<VoiceButton />
+				)}
+			</main>			<VoiceButton />
 		</div>
 	);
 };
