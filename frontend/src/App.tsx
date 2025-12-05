@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
 import { VoiceProvider } from "@/components/dashboard/VoiceContext";
+import { NotificationProvider } from "@/components/dashboard/NotificationContext";
 import { SidebarProvider } from "@/components/dashboard/SidebarContext";
 
 const queryClient = new QueryClient();
@@ -18,8 +19,9 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <VoiceProvider>
-        <SidebarProvider>
+      <NotificationProvider>
+        <VoiceProvider>
+          <SidebarProvider>
           <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
@@ -30,9 +32,10 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
           </Routes>
           </BrowserRouter>
-        </SidebarProvider>
-      </VoiceProvider>
-    </TooltipProvider>
+          </SidebarProvider>
+          </VoiceProvider>
+        </NotificationProvider>
+      </TooltipProvider>
   </QueryClientProvider>
 );
 

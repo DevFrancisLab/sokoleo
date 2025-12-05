@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronDown, MapPin, Package, Clock, Navigation } from "lucide-react";
+import { ChevronDown, MapPin, Package, Clock, Navigation, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -20,6 +20,7 @@ const demandConfig = {
 
 const MarketCard = ({ name, price, demand, crates, bestTime, distance }: MarketCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [showMap, setShowMap] = useState(false);
   const demandInfo = demandConfig[demand];
 
   return (
@@ -69,12 +70,49 @@ const MarketCard = ({ name, price, demand, crates, bestTime, distance }: MarketC
               <p className="text-xs text-muted-foreground">Distance</p>
               <p className="text-lg font-bold text-foreground">{distance} km away</p>
             </div>
-            <MapPin className="w-6 h-6 text-destructive ml-auto" />
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowMap(true);
+              }}
+              aria-label={`Open ${name} on map`}
+              className="ml-auto"
+            >
+              <MapPin className="w-6 h-6 text-destructive" />
+            </button>
           </div>
         </div>
 
         <Button className="w-full btn-large bg-primary hover:bg-primary/90 text-primary-foreground">See Details</Button>
       </div>
+      {showMap && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="relative w-full max-w-3xl mx-4 bg-background rounded-xl overflow-hidden shadow-xl">
+            <div className="flex items-center justify-between p-3 border-b border-border">
+              <h3 className="text-lg font-semibold">{name} — Map</h3>
+              <button
+                onClick={() => setShowMap(false)}
+                aria-label="Close map"
+                className="p-2 rounded-md hover:bg-muted"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="w-full h-96 sm:h-[600px]">
+              <iframe
+                title={`${name} map`}
+                src={`https://www.google.com/maps?q=${encodeURIComponent(name)}&output=embed`}
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

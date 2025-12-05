@@ -1,9 +1,11 @@
 import { MessageCircle, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { useVoice } from "./VoiceContext";
 
 const ChatSection = () => {
   const [message, setMessage] = useState("");
+  const { agentResponse, setAgentResponse } = useVoice();
 
   return (
     <section className="bg-card rounded-3xl shadow-soft p-5 border border-border/50">
@@ -21,7 +23,7 @@ const ChatSection = () => {
         <div className="flex items-start gap-3">
           <span className="text-2xl">🤖</span>
           <div>
-            <p className="text-base text-foreground">Hello! I can help you find the best market today. Just ask me!</p>
+            <p className="text-base text-foreground">{agentResponse ?? "Hello! I can help you find the best market today. Just ask me!"}</p>
             <p className="text-xs text-muted-foreground mt-2">AI Assistant</p>
           </div>
         </div>

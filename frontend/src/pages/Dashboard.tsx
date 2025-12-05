@@ -7,13 +7,14 @@ import InsightTile from "@/components/dashboard/InsightTile";
 import ChatSection from "@/components/dashboard/ChatSection";
 import VoiceButton from "@/components/dashboard/VoiceButton";
 import FloatingChatButton from "@/components/dashboard/FloatingChatButton";
+import NotificationBell from "@/components/dashboard/NotificationBell";
 import Sidebar from "@/components/dashboard/Sidebar";
 import { useSidebar } from "@/components/dashboard/SidebarContext";
 
 const markets = [
-	{ name: "Wakulima Market", price: 45, demand: "high" as const, crates: 200, bestTime: "Morning", distance: 12 },
-	{ name: "Githurai Market", price: 38, demand: "medium" as const, crates: 150, bestTime: "Afternoon", distance: 8 },
-	{ name: "Kawangware Market", price: 32, demand: "low" as const, crates: 80, bestTime: "Evening", distance: 15 },
+	{ name: "Wakulima Market", price: 125, demand: "high" as const, crates: 200, bestTime: "Morning", distance: 12 },
+	{ name: "Githurai Market", price: 140, demand: "medium" as const, crates: 150, bestTime: "Afternoon", distance: 8 },
+	{ name: "Kawangware Market", price: 130, demand: "low" as const, crates: 80, bestTime: "Evening", distance: 15 },
 ];
 
 const Dashboard = () => {
@@ -52,6 +53,10 @@ const Dashboard = () => {
 			<Sidebar />
 
 			<main className={`container max-w-6xl mx-auto px-4 py-8 ${isCollapsed ? "lg:ml-20" : "lg:ml-80"}`}>
+					<div className="flex items-center justify-end mb-4">
+						{/* Notification bell placed top-right */}
+						<NotificationBell />
+					</div>
 				{isMarketsOpen ? (
 					<>
 						{/* Expanded: centered markets only, AI Suggestions hidden */}

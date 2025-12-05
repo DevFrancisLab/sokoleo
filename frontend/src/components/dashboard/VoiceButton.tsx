@@ -2,11 +2,24 @@ import { Mic, Square } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useVoice } from "./VoiceContext";
+import { useNotifications } from "./NotificationContext";
 
 const BAR_COUNT = 9;
 
 const VoiceButton = () => {
-  const { isListening, setIsListening } = useVoice();
+  // use shared voice context for listening and agent response
+  const { isListening: ctxListening, setIsListening: setCtxListening, setAgentResponse } = useVoice();
+  const { addNotification } = useNotifications();
+  // Local fallback state if context not present (keeps previous behavior)
+  const [isListeningLocal, setIsListeningLocal] = useState(false);
+  const isListening = typeof ctxListening === "boolean" ? ctxListening : isListeningLocal;
+  const setIsListening = (v: boolean) => {
+    try {
+      setCtxListening(v);
+    } catch (e) {
+      setIsListeningLocal(v);
+    }
+  };
   const [levels, setLevels] = useState<number[]>(new Array(BAR_COUNT).fill(8));
 
   const audioCtxRef = useRef<AudioContext | null>(null);
@@ -14,6 +27,8 @@ const VoiceButton = () => {
   const dataArrayRef = useRef<Uint8Array | null>(null);
   const rafRef = useRef<number | null>(null);
   const mediaStreamRef = useRef<MediaStream | null>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const chunksRef = useRef<any[]>([]);
 
   useEffect(() => {
     if (isListening) {
@@ -32,6 +47,10 @@ const VoiceButton = () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       mediaStreamRef.current = stream;
+      // clear previous agent response when starting a new recording
+      try {
+        setAgentResponse?.(null);
+      } catch (e) {}
       const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
       const audioCtx = new AudioCtx();
       audioCtxRef.current = audioCtx;
@@ -44,6 +63,51 @@ const VoiceButton = () => {
       const bufferLength = analyser.frequencyBinCount;
       const dataArray = new Uint8Array(bufferLength);
       dataArrayRef.current = dataArray;
+
+      // setup MediaRecorder to capture audio for upload
+      try {
+        const mimeCandidates = [
+          "audio/webm;codecs=opus",
+          "audio/webm",
+          "audio/ogg;codecs=opus",
+          "audio/mp4",
+        ];
+        let recorder: MediaRecorder | null = null;
+        for (const mime of mimeCandidates) {
+          try {
+            recorder = new MediaRecorder(stream, { mimeType: mime });
+            // if construction succeeded, prefer this mime
+            break;
+          } catch (err) {
+            // try next
+          }
+        }
+        // final fallback: no mimeType
+        if (!recorder) {
+          try {
+            recorder = new MediaRecorder(stream);
+          } catch (err) {
+            recorder = null;
+          }
+        }
+
+        if (recorder) {
+          mediaRecorderRef.current = recorder;
+          chunksRef.current = [];
+          recorder.ondataavailable = (ev) => {
+            if (ev.data && ev.data.size > 0) chunksRef.current.push(ev.data);
+          };
+          recorder.onstop = () => {
+            handleRecorderStop();
+            mediaRecorderRef.current = null;
+          };
+          recorder.start();
+        } else {
+          console.warn("MediaRecorder not available in this browser");
+        }
+      } catch (e) {
+        console.warn("MediaRecorder setup failed:", e);
+      }
 
       const tick = () => {
         if (!analyserRef.current || !dataArrayRef.current) return;
@@ -99,8 +163,55 @@ const VoiceButton = () => {
       mediaStreamRef.current.getTracks().forEach((t) => t.stop());
       mediaStreamRef.current = null;
     }
+    // stop MediaRecorder and finalize upload
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
+      mediaRecorderRef.current.stop();
+    }
     // reset levels
     setLevels(new Array(BAR_COUNT).fill(8));
+  };
+
+  // send recorded audio to backend when recorder stops
+  const handleRecorderStop = async () => {
+    try {
+      const chunks = chunksRef.current;
+      if (!chunks || chunks.length === 0) return;
+      const blob = new Blob(chunks, { type: "audio/webm" });
+      // reset chunks
+      chunksRef.current = [];
+
+      const form = new FormData();
+      form.append("file", blob, "recording.webm");
+
+      const resp = await fetch("/api/voice/voice/", { method: "POST", body: form });
+      const data = await resp.json();
+      if (data?.audio_base64) {
+        // decode base64 and play
+        const binary = atob(data.audio_base64);
+        const len = binary.length;
+        const bytes = new Uint8Array(len);
+        for (let i = 0; i < len; i++) {
+          bytes[i] = binary.charCodeAt(i);
+        }
+        const audioBlob = new Blob([bytes], { type: "audio/mpeg" });
+        const url = URL.createObjectURL(audioBlob);
+        const audio = new Audio(url);
+        audio.play();
+      }
+      if (data?.agent) {
+        // set agent response into shared context so ChatSection can display it
+        try {
+          setAgentResponse?.(data.agent ?? null);
+          // also create a dashboard notification for the reply
+          addNotification?.(data.agent ?? "", "Assistant replied");
+        } catch (e) {
+          // fallback to console
+          console.log("Agent:", data.agent);
+        }
+      }
+    } catch (e) {
+      console.error("Voice roundtrip failed:", e);
+    }
   };
 
   return (
