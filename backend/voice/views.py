@@ -17,6 +17,9 @@ from rest_framework import status
 
 ELEVEN_API_KEY = os.getenv("ELEVEN_API_KEY")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+# Allow overriding the Groq API URL if needed in env
+GROQ_API_URL = os.getenv("GROQ_API_URL", "https://api.groq.ai/v1/models/groq-1/outputs")
 
 
 class TextToSpeechView(APIView):
@@ -145,8 +148,16 @@ class VoiceRoundtripView(APIView):
             
             transcription = stt_response.data.get("transcription", "")
             
-            # Step 2: Call simple mock agent to produce response
-            agent_response = self._call_mock_agent(transcription)
+            # Step 2: Produce response using Groq (if configured) otherwise fallback to mock
+            agent_response = None
+            if GROQ_API_KEY:
+                try:
+                    agent_response = self._call_groq_agent(transcription)
+                except Exception:
+                    agent_response = None
+
+            if not agent_response:
+                agent_response = self._call_mock_agent(transcription)
             
             # Step 3: Synthesize response via ElevenLabs TTS (call API directly so we can return base64)
             if not ELEVEN_API_KEY:
@@ -192,3 +203,52 @@ class VoiceRoundtripView(APIView):
                 return response
         
         return f"I received your message: '{user_input}'. How can I assist you?"
+
+    def _call_groq_agent(self, user_input: str) -> str:
+        """Call Groq API to get a text response. Falls back by raising on errors.
+
+        This implementation attempts to POST a JSON payload to GROQ_API_URL with
+        a simple prompt. If Groq's API expects a different shape, set `GROQ_API_URL`
+        accordingly in environment or adjust this method.
+        """
+        if not GROQ_API_KEY:
+            raise RuntimeError("GROQ_API_KEY not configured")
+
+        headers = {"Authorization": f"Bearer {GROQ_API_KEY}", "Content-Type": "application/json"}
+        # Basic payload; if Groq expects a different format, update GROQ_API_URL or payload
+        payload = {
+            "prompt": user_input,
+            "max_tokens": 200,
+        }
+
+        resp = requests.post(GROQ_API_URL, json=payload, headers=headers, timeout=15)
+        if resp.status_code != 200:
+            raise RuntimeError(f"Groq API error: {resp.status_code} {resp.text}")
+
+        data = resp.json()
+        # Try to extract text from common fields; adapt if Groq uses a different response format
+        if isinstance(data, dict):
+            # possible fields: 'output', 'text', 'choices'
+            if "text" in data and isinstance(data["text"], str):
+                return data["text"]
+            if "output" in data:
+                out = data["output"]
+                if isinstance(out, str):
+                    return out
+                # if output is a list of tokens/objects, join textual parts
+                if isinstance(out, list):
+                    parts = []
+                    for item in out:
+                        if isinstance(item, str):
+                            parts.append(item)
+                        elif isinstance(item, dict) and "text" in item:
+                            parts.append(item["text"])
+                    if parts:
+                        return "".join(parts)
+            if "choices" in data and isinstance(data["choices"], list) and len(data["choices"])>0:
+                first = data["choices"][0]
+                if isinstance(first, dict) and "text" in first:
+                    return first["text"]
+
+        # if nothing matched, raise so caller falls back
+        raise RuntimeError("Could not parse Groq response")
