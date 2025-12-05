@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sprout } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const HeroSection = () => {
   return (
@@ -28,10 +29,12 @@ const HeroSection = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-fade-up-delayed">
-              <Button variant="hero" size="xl">
-                Get Started Free
-                <ArrowRight className="w-5 h-5" />
-              </Button>
+              <Link to="/register">
+                <Button variant="hero" size="xl">
+                  Get Started Free
+                  <ArrowRight className="w-5 h-5" />
+                </Button>
+              </Link>
             </div>
 
             {/* Trust indicators */}

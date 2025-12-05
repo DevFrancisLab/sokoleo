@@ -1,12 +1,14 @@
 // Header intentionally omitted on dashboard
 import { useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import MarketCard from "@/components/dashboard/MarketCard";
 import InsightTile from "@/components/dashboard/InsightTile";
 import ChatSection from "@/components/dashboard/ChatSection";
 import VoiceButton from "@/components/dashboard/VoiceButton";
 import FloatingChatButton from "@/components/dashboard/FloatingChatButton";
+import Sidebar from "@/components/dashboard/Sidebar";
+import { useSidebar } from "@/components/dashboard/SidebarContext";
 
 const markets = [
 	{ name: "Wakulima Market", price: 45, demand: "high" as const, crates: 200, bestTime: "Morning", distance: 12 },
@@ -16,14 +18,19 @@ const markets = [
 
 const Dashboard = () => {
 	const [isMarketsOpen, setIsMarketsOpen] = useState(true);
+	const [isAISuggestionsOpen, setIsAISuggestionsOpen] = useState(true);
+
+	const { isCollapsed } = useSidebar();
 
 	return (
 		<div className="min-h-screen bg-background pb-24">
+			<Sidebar />
 
-			<main className="container max-w-6xl mx-auto px-4 py-8">
+			<main className={`container max-w-6xl mx-auto px-4 py-8 ${isCollapsed ? "lg:ml-20" : "lg:ml-80"}`}>
 				{isMarketsOpen ? (
-					/* Expanded: centered markets only, AI Suggestions hidden */
-					<div className="w-full flex justify-center">
+					<>
+						{/* Expanded: centered markets only, AI Suggestions hidden */}
+						<div className="w-full flex justify-center">
 						<div className="w-full max-w-2xl space-y-6">
 							<section>
 								<div className="flex items-center gap-2 mb-4">
@@ -51,10 +58,12 @@ const Dashboard = () => {
 								</Button>
 							</section>
 						</div>
-					</div>
-				) : (
-					/* Collapsed: full width centered layout for AI Suggestions + Chat */
-					<div className="w-full flex justify-center">
+						</div>
+						</>
+					) : (
+					<>
+						{/* Collapsed: full width centered layout for AI Suggestions + Chat */}
+						<div className="w-full flex justify-center">
 						<div className="w-full max-w-2xl space-y-6">
 							<section>
 								<div className="flex items-center gap-2 mb-4">
@@ -73,19 +82,29 @@ const Dashboard = () => {
 							</section>
 
 							<section>
-								<div className="flex items-center gap-2 mb-4">
-									<span className="text-2xl">💡</span>
-									<h2 className="text-xl font-bold text-foreground">AI Suggestions</h2>
-								</div>
+												<div className="flex items-center gap-2 mb-4">
+													<span className="text-2xl">💡</span>
+													<h2 className="text-xl font-bold text-foreground">AI Suggestions</h2>
+													<button
+														onClick={() => setIsAISuggestionsOpen(!isAISuggestionsOpen)}
+														aria-label={isAISuggestionsOpen ? "Collapse AI Suggestions" : "Expand AI Suggestions"}
+														className="ml-auto p-2 rounded-md hover:bg-muted transition-colors flex items-center"
+													>
+														<ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform ${isAISuggestionsOpen ? "rotate-180" : "rotate-0"}`} />
+													</button>
+												</div>
 
-								<div className="grid gap-3">
-									<InsightTile icon="🥇" label="Best Market Today" value="Wakulima Market" subtext="Ksh 45/kg • High demand" variant="primary" />
-								</div>
+												{isAISuggestionsOpen && (
+													<div className="grid gap-3">
+														<InsightTile icon="🥇" label="Best Market Today" value="Wakulima Market" subtext="Ksh 45/kg • High demand" variant="primary" />
+													</div>
+												)}
 							</section>
 
 							<ChatSection />
+							</div>
 						</div>
-					</div>
+					</>
 				)}
 			</main>
 			{isMarketsOpen && <FloatingChatButton onClick={() => setIsMarketsOpen(false)} />}
