@@ -20,6 +20,31 @@ const Dashboard = () => {
 	const [isMarketsOpen, setIsMarketsOpen] = useState(true);
 	const [isAISuggestionsOpen, setIsAISuggestionsOpen] = useState(true);
 
+	// Markets state and pagination
+	const [marketItems, setMarketItems] = useState(() => markets.slice());
+	const [visibleCount, setVisibleCount] = useState(() => Math.min(3, marketItems.length));
+
+	const loadMoreMarkets = () => {
+		// Append 3 generated market entries to simulate loading more
+		setMarketItems((prev) => {
+			const next = prev.slice();
+			const startIdx = prev.length + 1;
+			for (let i = 0; i < 3; i++) {
+				const idx = startIdx + i;
+				next.push({
+					name: `Market ${idx}`,
+					price: Math.floor(Math.random() * 30) + 25,
+					demand: (['low', 'medium', 'high'] as const)[Math.floor(Math.random() * 3)],
+					crates: Math.floor(Math.random() * 200) + 50,
+					bestTime: (['Morning', 'Afternoon', 'Evening'] as const)[Math.floor(Math.random() * 3)],
+					distance: Math.floor(Math.random() * 20) + 5,
+				} as any);
+			}
+			return next;
+		});
+		setVisibleCount((v) => v + 3);
+	};
+
 	const { isCollapsed } = useSidebar();
 
 	return (
@@ -48,12 +73,12 @@ const Dashboard = () => {
 								</div>
 
 								<div className="space-y-4">
-									{markets.map((market, index) => (
+									{marketItems.slice(0, visibleCount).map((market, index) => (
 										<MarketCard key={index} {...market} />
 									))}
 								</div>
 
-								<Button className="w-full mt-4 h-12 text-lg font-semibold" variant="outline">
+								<Button onClick={loadMoreMarkets} className="w-full mt-4 h-12 text-lg font-semibold" variant="outline">
 									Load More
 								</Button>
 							</section>
